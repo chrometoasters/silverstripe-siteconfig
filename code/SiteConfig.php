@@ -269,6 +269,15 @@ class SiteConfig extends DataObject implements PermissionProvider, TemplateGloba
      */
     public static function current_site_config()
     {
+        // If config defined a custom function for getting current site config
+        $extention = static::config()->get('current_site_config');
+        if (!empty($extention)) {
+            $siteConfig = call_user_func($extention);
+            if ($siteConfig instanceof static) {
+                return $siteConfig;
+            }
+        }
+
         /** @var SiteConfig $siteConfig */
         $siteConfig = DataObject::get_one(SiteConfig::class);
         if ($siteConfig) {
@@ -301,6 +310,15 @@ class SiteConfig extends DataObject implements PermissionProvider, TemplateGloba
      */
     public static function make_site_config()
     {
+        // If config defined a custom function for make site config
+        $extention = static::config()->get('make_site_config');
+        if (!empty($extention)) {
+            $siteConfig = call_user_func($extention);
+            if ($siteConfig instanceof static) {
+                return $siteConfig;
+            }
+        }
+
         $config = SiteConfig::create();
         $config->write();
 
